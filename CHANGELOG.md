@@ -1,5 +1,10 @@
 # Wijzigingen
 
+## 0.11.0 — 2026-11-19
+
+- Hangt af van oa-contract 0.9.0.
+- Nieuwe leesroute `GET /api/lees/objecten/:id/zaakclassificatie` naar het platform.
+
 ## 0.10.0 — 2026-11-10
 
 - Routes voor classificeren en wijzigingsvoorstellen: `lees/classificatie`, `lees/voorstellen`, `lees/voorstellen/:id/weergave`, `vastleg/objecten/:id/classificatie`, `vastleg/objecten/:id/voorstellen` en `vastleg/voorstellen/:id/beoordeling` (rol vrijgever).

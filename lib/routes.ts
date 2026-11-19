@@ -46,6 +46,8 @@ export const LEZEND: Route[] = [
   { methode: "POST", patroon: /^anonimiseren\/toepassen$/, doel: "diensten", pad: () => "/anonimiseren/toepassen" },
   { methode: "GET", patroon: /^zoeken$/, doel: "platform", pad: () => "/zoeken", metQuery: true },
   { methode: "GET", patroon: /^classificatie$/, doel: "platform", pad: () => "/classificatie", metQuery: true },
+  // Hoe andere stukken in dezelfde zaak of hetzelfde dossier zijn geclassificeerd: klassen en aantallen.
+  { methode: "GET", patroon: new RegExp(`^objecten/${ID}/zaakclassificatie$`), doel: "platform", pad: (m) => `/objecten/${m[1]}/zaakclassificatie` },
   // ?object=… (de voorstellen bij een stuk) of zonder: de open voorstellen, alleen voor een vrijgever (het platform toetst).
   { methode: "GET", patroon: /^voorstellen$/, doel: "platform", pad: () => "/voorstellen", metQuery: true },
   { methode: "GET", patroon: new RegExp(`^voorstellen/${ID}/weergave$`), doel: "platform", pad: (m) => `/voorstellen/${m[1]}/weergave` },
