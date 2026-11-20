@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.13.1 — 2026-11-20
+
+- oa-contract 0.13.0. De werkomgevingen en de LibreOffice-extensie (0.17.0) uit oa-adapters 0.21.0.
+
 ## 0.13.0 — 2026-11-20
 
 - **Huisstijl van de inrichting.** `/api/huisstijl` geeft de klasse van de huisstijl (`OA_HUISSTIJL_KLASSE`) en `/api/huisstijl/css` de CSS die oa-uitrol heeft opgehaald (`OA_HUISSTIJL_CSS`). Beide openbaar; het paneel gebruikt ze vóór het inloggen. Zonder instelling: het voorbeeldthema en geen CSS.
