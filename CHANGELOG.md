@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.12.0 — 2026-11-20
+
+- Inloggen: het inlogscherm van Keycloak opent in het Nederlands, zoals het paneel. De integratielaag geeft `ui_locales` mee; anders volgde Keycloak de taal van de zijbalk in LibreOffice of Word, en die is vaak Engels. `/api/auth/login?taal=en` opent het in het Engels.
+
 ## 0.11.3 — 2026-11-20
 
 - oa-contract 0.12.0.

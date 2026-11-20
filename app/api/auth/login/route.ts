@@ -2,12 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { eigenAdres } from "../../../../lib/adres";
 import { config } from "../../../../lib/config";
 import { naarMislukt, TERUGCOOKIE, veiligTerug } from "../../../../lib/inloggen";
-import { inlogAdres } from "../../../../lib/oidc";
+import { inlogAdres, inlogtaal } from "../../../../lib/oidc";
 import { bewaarPoging, nieuweSleutel, POGING_MINUTEN } from "../../../../lib/sessie";
 
 export const dynamic = "force-dynamic";
 
-/** Begint het inloggen bij Keycloak. ?terug=/pad bepaalt waar je daarna uitkomt. */
+/**
+ * Begint het inloggen bij Keycloak. ?terug=/pad bepaalt waar je daarna uitkomt,
+ * ?taal=nl|en de taal van het inlogscherm (standaard nl, zoals het paneel).
+ */
 export async function GET(req: NextRequest) {
   const terug = veiligTerug(req.nextUrl.searchParams.get("terug"));
 
@@ -21,7 +24,7 @@ export async function GET(req: NextRequest) {
   const state = nieuweSleutel();
   let adres: string, verifier: string;
   try {
-    ({ adres, verifier } = await inlogAdres(state));
+    ({ adres, verifier } = await inlogAdres(state, inlogtaal(req.nextUrl.searchParams.get("taal"))));
   } catch (e) {
     console.error("inloggen: inlogdienst niet bereikbaar", e);
     return naarMislukt(req, "dienst", terug);

@@ -51,7 +51,17 @@ async function ontdek(): Promise<Ontdekking> {
   return ontdekt;
 }
 
-export async function inlogAdres(state: string): Promise<{ adres: string; verifier: string }> {
+/** Talen van het inlogscherm (Keycloak-realm "gemeenten"). */
+export const INLOGTALEN = ["nl", "en"] as const;
+export type Inlogtaal = (typeof INLOGTALEN)[number];
+export const inlogtaal = (t: string | null | undefined): Inlogtaal => (INLOGTALEN as readonly string[]).includes(t ?? "") ? (t as Inlogtaal) : "nl";
+
+/**
+ * Adres van het inlogscherm. De taal gaat mee als ui_locales: anders volgt
+ * Keycloak de taal van de browser, en die is in de zijbalk van LibreOffice of
+ * Word vaak Engels terwijl het paneel Nederlands is.
+ */
+export async function inlogAdres(state: string, taal: Inlogtaal = "nl"): Promise<{ adres: string; verifier: string }> {
   const o = await ontdek();
   const verifier = nieuweSleutel();
   const challenge = createHash("sha256").update(verifier).digest("base64url");
@@ -63,6 +73,7 @@ export async function inlogAdres(state: string): Promise<{ adres: string; verifi
   u.searchParams.set("state", state);
   u.searchParams.set("code_challenge", challenge);
   u.searchParams.set("code_challenge_method", "S256");
+  u.searchParams.set("ui_locales", taal);
   return { adres: u.toString(), verifier };
 }
 
