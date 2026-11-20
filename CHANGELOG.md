@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.13.0 — 2026-11-20
+
+- **Huisstijl van de inrichting.** `/api/huisstijl` geeft de klasse van de huisstijl (`OA_HUISSTIJL_KLASSE`) en `/api/huisstijl/css` de CSS die oa-uitrol heeft opgehaald (`OA_HUISSTIJL_CSS`). Beide openbaar; het paneel gebruikt ze vóór het inloggen. Zonder instelling: het voorbeeldthema en geen CSS.
+
 ## 0.12.0 — 2026-11-20
 
 - Inloggen: het inlogscherm van Keycloak opent in het Nederlands, zoals het paneel. De integratielaag geeft `ui_locales` mee; anders volgde Keycloak de taal van de zijbalk in LibreOffice of Word, en die is vaak Engels. `/api/auth/login?taal=en` opent het in het Engels.
