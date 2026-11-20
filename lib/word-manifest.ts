@@ -117,7 +117,7 @@ export function manifest(basis: string): string {
   <Description DefaultValue="Metadata, toegankelijkheid en vastleggen in het informatieplatform van de gemeente. Prototype."/>
   <IconUrl DefaultValue="${b}/word/icoon-32.png"/>
   <HighResolutionIconUrl DefaultValue="${b}/word/icoon-64.png"/>
-  <SupportUrl DefaultValue="https://github.com/digitaalgemeengoed/oa-adapters"/>
+  <SupportUrl DefaultValue="https://github.com/Digitaal-Gemeengoed/oa-adapters"/>
   <AppDomains>
     <AppDomain>${b}</AppDomain>
     <AppDomain>https://${esc(idHost)}</AppDomain>
