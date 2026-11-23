@@ -61,7 +61,7 @@ export const inlogtaal = (t: string | null | undefined): Inlogtaal => (INLOGTALE
  * Keycloak de taal van de browser, en die is in de zijbalk van LibreOffice of
  * Word vaak Engels terwijl het paneel Nederlands is.
  */
-export async function inlogAdres(state: string, taal: Inlogtaal = "nl"): Promise<{ adres: string; verifier: string }> {
+export async function inlogAdres(state: string, taal: Inlogtaal = "nl", organisaties = true): Promise<{ adres: string; verifier: string }> {
   const o = await ontdek();
   const verifier = nieuweSleutel();
   const challenge = createHash("sha256").update(verifier).digest("base64url");
@@ -70,7 +70,8 @@ export async function inlogAdres(state: string, taal: Inlogtaal = "nl"): Promise
   u.searchParams.set("client_id", config.oidc.clientId());
   u.searchParams.set("redirect_uri", `${config.oidc.basisUrl()}/api/auth/terug`);
   // organization:* geeft alle gemeenten waar je bij hoort (Keycloak Organizations), ook bij een GR.
-  u.searchParams.set("scope", "openid profile email organization:*");
+  // Kent de client die scope nog niet (VPS 3 nog niet bijgewerkt), dan opnieuw zonder: zie /api/auth/terug.
+  u.searchParams.set("scope", organisaties ? "openid profile email organization:*" : "openid profile");
   u.searchParams.set("state", state);
   u.searchParams.set("code_challenge", challenge);
   u.searchParams.set("code_challenge_method", "S256");

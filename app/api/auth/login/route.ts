@@ -10,6 +10,8 @@ export const dynamic = "force-dynamic";
 /**
  * Begint het inloggen bij Keycloak. ?terug=/pad bepaalt waar je daarna uitkomt,
  * ?taal=nl|en de taal van het inlogscherm (standaard nl, zoals het paneel).
+ * ?organisaties=nee vraagt de gemeenten niet als organisaties (terugval als
+ * Keycloak de scope nog niet kent; de claim "gemeente" werkt dan zoals vroeger).
  */
 export async function GET(req: NextRequest) {
   const terug = veiligTerug(req.nextUrl.searchParams.get("terug"));
@@ -24,7 +26,7 @@ export async function GET(req: NextRequest) {
   const state = nieuweSleutel();
   let adres: string, verifier: string;
   try {
-    ({ adres, verifier } = await inlogAdres(state, inlogtaal(req.nextUrl.searchParams.get("taal"))));
+    ({ adres, verifier } = await inlogAdres(state, inlogtaal(req.nextUrl.searchParams.get("taal")), req.nextUrl.searchParams.get("organisaties") !== "nee"));
   } catch (e) {
     console.error("inloggen: inlogdienst niet bereikbaar", e);
     return naarMislukt(req, "dienst", terug);

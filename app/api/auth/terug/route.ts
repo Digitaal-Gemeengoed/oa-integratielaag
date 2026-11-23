@@ -25,6 +25,16 @@ export async function GET(req: NextRequest) {
   const alEerder = req.cookies.has(OPNIEUWCOOKIE);
 
   const fout = p.get("error");
+  if (fout === "invalid_scope" && !alEerder) {
+    // Keycloak kent de scope organization nog niet voor deze client (gemeenten.sh nog niet gedraaid op VPS 3).
+    console.warn("inloggen: Keycloak kent de scope organization niet; opnieuw zonder. Draai bijwerken.sh of gemeenten.sh op VPS 3.");
+    const u = new URL("/api/auth/login", config.oidc.basisUrl());
+    u.searchParams.set("terug", terug);
+    u.searchParams.set("organisaties", "nee");
+    const r = NextResponse.redirect(u);
+    r.cookies.set(OPNIEUWCOOKIE, "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 300 });
+    return r;
+  }
   if (fout) {
     console.warn("inloggen: de inlogdienst gaf", fout, p.get("error_description") ?? "");
     return naarMislukt(req, redenVanDienst(fout), terug);

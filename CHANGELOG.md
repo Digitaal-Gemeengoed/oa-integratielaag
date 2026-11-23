@@ -6,6 +6,7 @@
 - Inloggen vraagt de scope `organization:*`. De identiteit krijgt de thuisgemeente met haar naam en alle gemeenten waar de medewerker bij hoort (`gemeentenUitToken` uit het contract). Zonder organisaties werkt de claim `gemeente` zoals voorheen.
 - Hoort een account bij geen gemeente (of bij meer, zonder thuisgemeente), dan een pagina met uitleg in plaats van een fout.
 - Na het inloggen meldt de integratielaag de thuisgemeente aan bij het platform (`PUT /gemeente`), zodat een nieuwe gemeente vanzelf klaarstaat.
+- Kent Keycloak de scope `organization` nog niet voor de client (VPS 3 nog niet bijgewerkt), dan weigert Keycloak het inloggen met `invalid_scope`. De integratielaag probeert het dan één keer opnieuw zonder die scope; inloggen werkt dan zoals voorheen, met een waarschuwing in het log.
 - oa-contract 0.14.0, oa-adapters 0.21.1.
 
 ## 0.13.1 — 2026-11-20
