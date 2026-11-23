@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.14.1 — 2026-11-23
+
+- oa-contract 0.15.0, oa-adapters 0.22.0 (LibreOffice-extensie 0.18.0).
+
 ## 0.14.0 — 2026-11-23
 
 **De gemeente uit Keycloak Organizations.** Ontwerp: `oa-uitrol/docs/multi-tenant.md`.
