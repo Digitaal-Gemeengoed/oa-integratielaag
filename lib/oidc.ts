@@ -1,7 +1,7 @@
 import { niveauUitRollen } from "./identiteit";
 import { createHash } from "node:crypto";
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
-import type { WieBenIk } from "@digitaalgemeengoed/oa-contract";
+import { gemeentenUitToken, type WieBenIk } from "@digitaalgemeengoed/oa-contract";
 import { config } from "./config";
 import { nieuweSleutel } from "./sessie";
 
@@ -25,7 +25,7 @@ interface Ontdekking {
  */
 export class InlogFout extends Error {
   constructor(
-    readonly soort: "code-ongeldig" | "dienst" | "token",
+    readonly soort: "code-ongeldig" | "dienst" | "token" | "geen-gemeente",
     melding: string,
   ) {
     super(melding);
@@ -69,7 +69,8 @@ export async function inlogAdres(state: string, taal: Inlogtaal = "nl"): Promise
   u.searchParams.set("response_type", "code");
   u.searchParams.set("client_id", config.oidc.clientId());
   u.searchParams.set("redirect_uri", `${config.oidc.basisUrl()}/api/auth/terug`);
-  u.searchParams.set("scope", "openid profile");
+  // organization:* geeft alle gemeenten waar je bij hoort (Keycloak Organizations), ook bij een GR.
+  u.searchParams.set("scope", "openid profile email organization:*");
   u.searchParams.set("state", state);
   u.searchParams.set("code_challenge", challenge);
   u.searchParams.set("code_challenge_method", "S256");
@@ -120,14 +121,20 @@ export async function uitlogAdres(): Promise<string | null> {
 }
 
 /**
- * Van token naar identiteit. De gemeente komt uit de claim "gemeente"
- * (een attribuut-mapper in Keycloak), de rollen uit de realm-rollen.
+ * Van token naar identiteit. De gemeenten komen uit de claim "organization"
+ * (Keycloak Organizations), de thuisgemeente uit die claim of de claim
+ * "gemeente" (zie gemeentenUitToken in het contract), de rollen uit de realm-rollen.
  * Een leverancier krijgt de claim "leverancier"; of die namens een gemeente
  * mag handelen, toetst de delegatie, niet het token.
  */
 export function naarIdentiteit(p: JWTPayload): WieBenIk {
-  const gemeente = String((p as Record<string, unknown>).gemeente ?? "");
-  if (!/^[a-z0-9-]{2,40}$/.test(gemeente)) throw new Error("Het token heeft geen geldige claim 'gemeente'");
+  const { thuis, gemeenten } = gemeentenUitToken(p as Record<string, unknown>);
+  if (!thuis) {
+    throw new InlogFout(
+      "geen-gemeente",
+      gemeenten.length > 1 ? "Het account hoort bij meer gemeenten, zonder thuisgemeente (attribuut 'gemeente')" : "Het account hoort bij geen gemeente",
+    );
+  }
   const rollen = ((p as { realm_access?: { roles?: string[] } }).realm_access?.roles ?? []).filter(
     (r) => ["medewerker", "beheerder", "vrijgever", "leverancier"].includes(r) || /^ppl-[123]$/.test(r),
   );
@@ -135,7 +142,9 @@ export function naarIdentiteit(p: JWTPayload): WieBenIk {
   return {
     sub: String(p.sub),
     naam: String((p as Record<string, unknown>).name ?? (p as Record<string, unknown>).preferred_username ?? p.sub),
-    gemeente,
+    gemeente: thuis.id,
+    gemeenteNaam: thuis.naam,
+    ...(gemeenten.length ? { gemeenten } : {}),
     rollen,
     niveau: niveauUitRollen(rollen),
     ...(leverancier ? { namens: String(leverancier) } : {}),

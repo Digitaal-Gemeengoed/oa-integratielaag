@@ -6,9 +6,9 @@ import { Weigering } from "./antwoord";
 
 /** Testgebruikers voor OA_AUTH=dev. Nooit in een omgeving met echte gegevens. */
 const DEV_GEBRUIKERS: Record<string, WieBenIk> = {
-  "haarlem-medewerker": { sub: "dev-haarlem-1", naam: "Femke de Vries", gemeente: "haarlem", rollen: ["medewerker", "ppl-1"], niveau: 1 },
-  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", rollen: ["medewerker", "beheerder", "vrijgever", "ppl-3"], niveau: 3 },
-  "zandvoort-medewerker": { sub: "dev-zandvoort-1", naam: "Sanne Visser", gemeente: "zandvoort", rollen: ["medewerker", "ppl-1"], niveau: 1 },
+  "haarlem-medewerker": { sub: "dev-haarlem-1", naam: "Femke de Vries", gemeente: "haarlem", gemeenteNaam: "Gemeente Haarlem", rollen: ["medewerker", "ppl-1"], niveau: 1 },
+  "haarlem-beheerder": { sub: "dev-haarlem-2", naam: "Jeroen Bakker", gemeente: "haarlem", gemeenteNaam: "Gemeente Haarlem", rollen: ["medewerker", "beheerder", "vrijgever", "ppl-3"], niveau: 3 },
+  "zandvoort-medewerker": { sub: "dev-zandvoort-1", naam: "Sanne Visser", gemeente: "zandvoort", gemeenteNaam: "Gemeente Zandvoort", rollen: ["medewerker", "ppl-1"], niveau: 1 },
 };
 
 /**

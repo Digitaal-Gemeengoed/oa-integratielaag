@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { config } from "../../../../lib/config";
 import { naarMislukt, opnieuw, OPNIEUWCOOKIE, redenVanDienst, TERUGCOOKIE, veiligTerug } from "../../../../lib/inloggen";
+import { meldGemeenteAan } from "../../../../lib/doorgeven";
 import { InlogFout, wisselCode } from "../../../../lib/oidc";
 import { leesSessie, maakSessie, neemPoging, SESSIECOOKIE } from "../../../../lib/sessie";
 
@@ -36,6 +37,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const { identiteit, accessToken } = await wisselCode(code, poging.verifier);
+    await meldGemeenteAan(identiteit);
     const sleutel = maakSessie(identiteit, accessToken);
     const r = NextResponse.redirect(new URL(terug, config.oidc.basisUrl()));
     r.cookies.set(SESSIECOOKIE, sleutel, {
@@ -51,6 +53,7 @@ export async function GET(req: NextRequest) {
   } catch (e) {
     console.error("inloggen:", e);
     if (e instanceof InlogFout && e.soort === "code-ongeldig") return alEerder ? naarMislukt(req, "verlopen", terug) : opnieuw(req, terug);
+    if (e instanceof InlogFout && e.soort === "geen-gemeente") return naarMislukt(req, "geen-gemeente", terug);
     return naarMislukt(req, e instanceof InlogFout && e.soort === "dienst" ? "dienst" : "onbekend", terug);
   }
 }

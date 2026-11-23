@@ -16,6 +16,10 @@ const UITLEG: Record<Reden, { kop: string; tekst: string }> = {
     kop: "De inlogdienst is nu niet bereikbaar",
     tekst: "Inloggen lukt even niet aan de kant van de server. Probeer het over een paar minuten opnieuw. Blijft het zo, meld het dan bij de beheerder.",
   },
+  "geen-gemeente": {
+    kop: "Je account hoort nog bij geen gemeente",
+    tekst: "Inloggen is gelukt, maar de assistent weet niet voor welke gemeente je werkt. Dat volgt uit het domein van je e-mailadres. Vraag de beheerder om je gemeente en dat domein aan te sluiten.",
+  },
   onbekend: {
     kop: "Inloggen is niet gelukt",
     tekst: "Er ging iets mis bij het inloggen. Probeer het opnieuw. Blijft het zo, meld het dan bij de beheerder, met het tijdstip.",

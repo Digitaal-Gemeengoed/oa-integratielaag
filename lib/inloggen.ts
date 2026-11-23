@@ -13,6 +13,8 @@ export type Reden =
   | "geweigerd"
   /** De inlogdienst (Keycloak) is niet bereikbaar of gaf een fout. */
   | "dienst"
+  /** Het account hoort (nog) bij geen gemeente: het e-maildomein staat niet in GEMEENTEN op VPS 3. */
+  | "geen-gemeente"
   /** Iets anders; staat in het logboek van de server. */
   | "onbekend";
 

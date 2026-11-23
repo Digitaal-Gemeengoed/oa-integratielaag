@@ -1,5 +1,13 @@
 # Wijzigingen
 
+## 0.14.0 — 2026-11-23
+
+**De gemeente uit Keycloak Organizations.** Ontwerp: `oa-uitrol/docs/multi-tenant.md`.
+- Inloggen vraagt de scope `organization:*`. De identiteit krijgt de thuisgemeente met haar naam en alle gemeenten waar de medewerker bij hoort (`gemeentenUitToken` uit het contract). Zonder organisaties werkt de claim `gemeente` zoals voorheen.
+- Hoort een account bij geen gemeente (of bij meer, zonder thuisgemeente), dan een pagina met uitleg in plaats van een fout.
+- Na het inloggen meldt de integratielaag de thuisgemeente aan bij het platform (`PUT /gemeente`), zodat een nieuwe gemeente vanzelf klaarstaat.
+- oa-contract 0.14.0, oa-adapters 0.21.1.
+
 ## 0.13.1 — 2026-11-20
 
 - oa-contract 0.13.0. De werkomgevingen en de LibreOffice-extensie (0.17.0) uit oa-adapters 0.21.0.

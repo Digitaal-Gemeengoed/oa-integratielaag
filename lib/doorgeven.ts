@@ -58,3 +58,27 @@ export async function naarDiensten(req: NextRequest, w: WieBenIk, pad: string): 
   });
   return doorsturen(r);
 }
+
+const aangemeld = new Map<string, string>();
+
+/**
+ * Na het inloggen: de thuisgemeente aanmelden bij het platform. Is ze nieuw
+ * (net in Keycloak aangesloten), dan zet het platform haar klaar; anders werkt
+ * het alleen de naam bij. Eén keer per gemeente en naam per proces. Een fout
+ * houdt het inloggen niet tegen: het platform meldt het dan zelf bij het eerste verzoek.
+ */
+export async function meldGemeenteAan(w: WieBenIk): Promise<void> {
+  const naam = w.gemeenteNaam ?? w.gemeente;
+  if (aangemeld.get(w.gemeente) === naam) return;
+  try {
+    const r = await fetch(`${config.platformUrl()}/gemeente`, {
+      method: "PUT",
+      headers: kopregels(w, config.platformSleutel()),
+      body: JSON.stringify({ naam }),
+    });
+    if (r.ok) aangemeld.set(w.gemeente, naam);
+    else console.warn("gemeente aanmelden bij het platform:", r.status, await r.text().catch(() => ""));
+  } catch (e) {
+    console.warn("gemeente aanmelden bij het platform:", (e as Error).message);
+  }
+}
