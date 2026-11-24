@@ -61,6 +61,9 @@ const nextConfig = {
       { source: "/werkomgeving", destination: "/werkomgeving/index.html" },
       { source: "/collabora", destination: "/collabora/index.html" },
       { source: "/libreoffice", destination: "/libreoffice/index.html" },
+      // Proef: Collabora met de assistent als extensie (oa-adapters/collabora-extensie).
+      { source: "/collabora-proef", destination: "/collabora-proef/index.html" },
+      { source: "/collabora-extensie", destination: "/collabora-extensie/index.html" },
     ];
   },
   async headers() {

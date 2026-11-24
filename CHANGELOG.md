@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.15.0 — 2026-11-24
+
+- Proef: de pagina's `/collabora-proef` en `/collabora-extensie` (oa-adapters 0.23.0): Collabora Online met de assistent als extensie erin.
+
 ## 0.14.1 — 2026-11-23
 
 - oa-contract 0.15.0, oa-adapters 0.22.0 (LibreOffice-extensie 0.18.0).
