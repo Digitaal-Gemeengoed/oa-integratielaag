@@ -1,5 +1,9 @@
 # Wijzigingen
 
+## 0.16.0 — 2026-11-26
+
+- **Uitlogbericht van Keycloak** (OpenID Connect Back-Channel Logout) op `POST /api/auth/uitlogbericht`: het `logout_token` wordt gecontroleerd (handtekening, uitgever, ontvanger, uitloggebeurtenis, geen nonce, hooguit tien minuten oud), daarna eindigen alle sessies van die persoon, ook gekoppelde. Zo geldt uitloggen elders, uitschakelen of een ander PPL-niveau (beheerportaal) direct in de Office Assistent, niet pas als de sessie verloopt.
+
 ## 0.15.1 — 2026-11-25
 
 - oa-contract 0.16.0.

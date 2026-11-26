@@ -151,3 +151,26 @@ export function naarIdentiteit(p: JWTPayload): WieBenIk {
     ...(leverancier ? { namens: String(leverancier) } : {}),
   };
 }
+
+const UITLOGGEBEURTENIS = "http://schemas.openid.net/event/backchannel-logout";
+
+/**
+ * Een uitlogbericht van Keycloak (OpenID Connect Back-Channel Logout): het
+ * logout_token controleren (handtekening, uitgever, ontvanger, gebeurtenis,
+ * geen nonce) en de persoon (sub) teruggeven.
+ */
+export async function controleerUitlogToken(token: string): Promise<string> {
+  const o = await ontdek();
+  sleutels ??= createRemoteJWKSet(new URL(o.jwks_uri));
+  let payload: JWTPayload;
+  try {
+    ({ payload } = await jwtVerify(token, sleutels, { issuer: o.issuer, audience: config.oidc.clientId(), maxTokenAge: "10m" }));
+  } catch (e) {
+    throw new InlogFout("token", `Uitlogbericht niet geldig: ${(e as Error).message}`);
+  }
+  const events = payload.events as Record<string, unknown> | undefined;
+  if (!events || typeof events !== "object" || !(UITLOGGEBEURTENIS in events)) throw new InlogFout("token", "Uitlogbericht zonder uitloggebeurtenis");
+  if ("nonce" in payload) throw new InlogFout("token", "Uitlogbericht met nonce");
+  if (typeof payload.sub !== "string" || !payload.sub) throw new InlogFout("token", "Uitlogbericht zonder persoon (sub)");
+  return payload.sub;
+}

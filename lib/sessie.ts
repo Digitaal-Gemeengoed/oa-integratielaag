@@ -75,6 +75,17 @@ export function beeindigSessie(sleutel: string | undefined): void {
   if (sleutel) sessies.delete(sleutel);
 }
 
+/**
+ * Alle sessies van één persoon beëindigen (ook gekoppelde), bijvoorbeeld als
+ * Keycloak meldt dat hij is uitgelogd, is uitgeschakeld of een ander niveau
+ * heeft gekregen. Geeft het aantal.
+ */
+export function beeindigVoorPersoon(sub: string): number {
+  let n = 0;
+  for (const [k, s] of sessies) if (s.identiteit.sub === sub) (sessies.delete(k), n++);
+  return n;
+}
+
 export function bewaarPoging(state: string, p: Inlogpoging): void {
   ruimOp();
   pogingen.set(state, p);
